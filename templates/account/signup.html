@@ -1,0 +1,133 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<main>
+  <div class="container">
+    <section class="py-5">
+      <div class="row justify-content-center wow fadeIn">
+        <div class="col-lg-6 col-md-8">
+
+          <!-- Card đăng ký -->
+          <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-primary text-white text-center py-4">
+              <h3 class="mb-0 font-weight-bold">
+                <i class="fas fa-user-plus mr-2"></i>
+                {% trans "Đăng Ký Tài Khoản" %}
+              </h3>
+            </div>
+
+            <div class="card-body p-4">
+
+              <!-- Thông báo đã có tài khoản -->
+              <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle mr-2"></i>
+                {% blocktrans %}Đã có tài khoản?
+                <a href="{{ login_url }}" class="alert-link font-weight-bold">Đăng nhập ngay</a>{% endblocktrans %}
+              </div>
+
+              <!-- Form đăng ký -->
+              <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+
+                <div class="form-group mb-4">
+                  {{ form|crispy }}
+                </div>
+
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+
+                <!-- Nút đăng ký -->
+                <div class="mb-3">
+                  <button class="btn btn-primary btn-lg btn-block w-100" type="submit">
+                    <i class="fas fa-user-check mr-2"></i>
+                    {% trans "Đăng Ký" %}
+                  </button>
+                </div>
+
+                <!-- Điều khoản -->
+                <p class="text-center text-muted small mb-0">
+                  <i class="fas fa-shield-alt mr-1"></i>
+                  {% trans "Bằng việc đăng ký, bạn đồng ý với" %}
+                  <a href="#" class="text-primary">{% trans "Điều khoản dịch vụ" %}</a>
+                  {% trans "và" %}
+                  <a href="#" class="text-primary">{% trans "Chính sách bảo mật" %}</a>
+                </p>
+
+              </form>
+
+            </div>
+
+            <!-- Footer card -->
+            <div class="card-footer text-center py-3 bg-light">
+              <small class="text-muted">
+                {% trans "Đã có tài khoản?" %}
+                <a href="{{ login_url }}" class="font-weight-bold text-primary">{% trans "Đăng nhập tại đây" %}</a>
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<style>
+  /* Custom styling cho form đăng ký */
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    transition: transform 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+
+  .alert-info {
+    background-color: #e7f3ff;
+    border-color: #b3d9ff;
+    color: #004085;
+    border-radius: 8px;
+  }
+
+  .alert-info .alert-link {
+    color: #667eea;
+  }
+
+  .alert-info .alert-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .col-md-8 {
+      padding: 0 15px;
+    }
+  }
+</style>
+
+{% endblock %}

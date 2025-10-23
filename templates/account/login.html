@@ -1,0 +1,168 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<main>
+  <div class="container">
+    <section class="py-5">
+      <div class="row justify-content-center wow fadeIn">
+        <div class="col-lg-5 col-md-7">
+
+          <!-- Card đăng nhập -->
+          <div class="card shadow-lg border-0 rounded-lg">
+            <div class="card-header bg-primary text-white text-center py-4">
+              <h3 class="mb-0 font-weight-bold">
+                <i class="fas fa-user-circle mr-2"></i>
+                {% trans "Đăng Nhập" %}
+              </h3>
+            </div>
+
+            <div class="card-body p-4">
+
+              {% get_providers as socialaccount_providers %}
+
+              {% if socialaccount_providers %}
+
+              <!-- Đăng nhập mạng xã hội -->
+              <div class="text-center mb-4">
+                <p class="text-muted small">{% trans "Đăng nhập nhanh với" %}</p>
+                <div class="socialaccount_ballot">
+                  <ul class="socialaccount_providers list-unstyled d-flex justify-content-center gap-2">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="position-relative my-4">
+                <hr class="border-top">
+                <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+                  {% trans 'hoặc' %}
+                </span>
+              </div>
+
+              {% include "socialaccount/snippets/login_extra.html" %}
+
+              {% else %}
+              <div class="alert alert-info text-center" role="alert">
+                <i class="fas fa-info-circle mr-2"></i>
+                {% blocktrans %}Nếu bạn chưa có tài khoản, vui lòng
+                <a href="{{ signup_url }}" class="alert-link font-weight-bold">đăng ký</a> trước.{% endblocktrans %}
+              </div>
+              {% endif %}
+
+              <!-- Form đăng nhập -->
+              <form class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+
+                <div class="form-group mb-4">
+                  {{ form|crispy }}
+                </div>
+
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+
+                <!-- Nút hành động -->
+                <div class="d-grid gap-2 mb-3">
+                  <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    {% trans "Đăng Nhập" %}
+                  </button>
+                </div>
+
+                <div class="text-center">
+                  <a class="text-decoration-none small" href="{% url 'account_reset_password' %}">
+                    <i class="fas fa-key mr-1"></i>
+                    {% trans "Quên mật khẩu?" %}
+                  </a>
+                </div>
+
+              </form>
+
+            </div>
+
+            <!-- Footer card -->
+            <div class="card-footer text-center py-3 bg-light">
+              <small class="text-muted">
+                {% trans "Chưa có tài khoản?" %}
+                <a href="{{ signup_url }}" class="font-weight-bold text-primary">{% trans "Đăng ký ngay" %}</a>
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<style>
+  /* Custom styling cho form đăng nhập */
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    transition: transform 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .socialaccount_providers li {
+    display: inline-block;
+    margin: 0 8px;
+  }
+
+  .socialaccount_providers a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    color: #333;
+    transition: all 0.3s;
+    text-decoration: none;
+    border: 2px solid #e9ecef;
+  }
+
+  .socialaccount_providers a:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+
+  .gap-2 {
+    gap: 0.5rem !important;
+  }
+
+  @media (max-width: 768px) {
+    .col-md-7 {
+      padding: 0 15px;
+    }
+  }
+</style>
+
+{% endblock %}

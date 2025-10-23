@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<main>
+  <div class="container wow fadeIn">
+    <h2 class="my-5 h2 text-center">Đơn Hàng</h2>
+    <div class="row">
+      <div class="col-md-8 mb-4">
+        <div class="card">
+          <form method="POST" class="card-body">
+            {% csrf_token %}
+
+            <h3>Địa chỉ giao hàng</h3>
+
+            <div class='hideable_shipping_form'>
+
+              <div class="md-form mb-4">
+                <label for="shipping_address">Địa chỉ giao hàng</label>
+                <input type='text' placeholder='Số nhà, tên đường' id='shipping_address' name='shipping_address'
+                  class='form-control' required />
+              </div>
+
+              <div class="md-form mb-4">
+                <label for="shipping_address2">Địa chỉ chi tiết (tùy chọn)</label>
+                <input type='text' placeholder='Căn hộ, tòa nhà...' id='shipping_address2' name='shipping_address2'
+                  class='form-control' />
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="shipping_city">Tỉnh/Thành phố</label>
+                  <select class="form-control" id="shipping_city" name="shipping_city" required>
+                    <option value="">Chọn Tỉnh/Thành phố</option>
+                    <option value="hanoi">Hà Nội</option>
+                    <option value="hochiminh">Hồ Chí Minh</option>
+                    <option value="danang">Đà Nẵng</option>
+                    <option value="haiphong">Hải Phòng</option>
+                    <option value="cantho">Cần Thơ</option>
+                    <option value="other">Tỉnh thành khác</option>
+                  </select>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="shipping_district">Quận/Huyện</label>
+                  <input type='text' placeholder='Quận/Huyện' id='shipping_district' name='shipping_district'
+                    class='form-control' required />
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="shipping_ward">Phường/Xã</label>
+                  <input type='text' placeholder='Phường/Xã' id='shipping_ward' name='shipping_ward'
+                    class='form-control' required />
+                </div>
+              </div>
+
+              <div class="md-form mb-4">
+                <label for="shipping_phone">Số điện thoại</label>
+                <input type='tel' placeholder='0912345678' id='shipping_phone' name='shipping_phone'
+                  class='form-control' required />
+              </div>
+
+              <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" name="same_billing_address"
+                  id="same_billing_address">
+                <label class="custom-control-label" for="same_billing_address">Địa chỉ thanh toán giống địa chỉ giao
+                  hàng</label>
+              </div>
+
+              <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" name="set_default_shipping"
+                  id="set_default_shipping">
+                <label class="custom-control-label" for="set_default_shipping">Lưu làm địa chỉ giao hàng mặc
+                  định</label>
+              </div>
+
+            </div>
+
+            {% if default_shipping_address %}
+            <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
+              <label class="custom-control-label" for="use_default_shipping">Sử dụng địa chỉ giao hàng mặc định: {{
+                default_shipping_address.street_address|truncatechars:30 }}</label>
+            </div>
+            {% endif %}
+
+            <hr class="my-4">
+
+            <h3>Địa chỉ thanh toán</h3>
+
+            <div class='hideable_billing_form'>
+              <div class="md-form mb-4">
+                <label for="billing_address">Địa chỉ thanh toán</label>
+                <input type='text' placeholder='Số nhà, tên đường' id='billing_address' name='billing_address'
+                  class='form-control' />
+              </div>
+
+              <div class="md-form mb-4">
+                <label for="billing_address2">Địa chỉ chi tiết (tùy chọn)</label>
+                <input type='text' placeholder='Căn hộ, tòa nhà...' id='billing_address2' name='billing_address2'
+                  class='form-control' />
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="billing_city">Tỉnh/Thành phố</label>
+                  <select class="form-control" id="billing_city" name="billing_city">
+                    <option value="">Chọn Tỉnh/Thành phố</option>
+                    <option value="hanoi">Hà Nội</option>
+                    <option value="hochiminh">Hồ Chí Minh</option>
+                    <option value="danang">Đà Nẵng</option>
+                    <option value="haiphong">Hải Phòng</option>
+                    <option value="cantho">Cần Thơ</option>
+                    <option value="other">Tỉnh thành khác</option>
+                  </select>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="billing_district">Quận/Huyện</label>
+                  <input type='text' placeholder='Quận/Huyện' id='billing_district' name='billing_district'
+                    class='form-control' />
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="billing_ward">Phường/Xã</label>
+                  <input type='text' placeholder='Phường/Xã' id='billing_ward' name='billing_ward'
+                    class='form-control' />
+                </div>
+              </div>
+
+              <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
+                <label class="custom-control-label" for="set_default_billing">Lưu làm địa chỉ thanh toán mặc
+                  định</label>
+              </div>
+
+            </div>
+
+            {% if default_billing_address %}
+            <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
+              <label class="custom-control-label" for="use_default_billing">Sử dụng địa chỉ thanh toán mặc định: {{
+                default_billing_address.street_address|truncatechars:30 }}</label>
+            </div>
+            {% endif %}
+
+            <hr class="my-4">
+
+            <h3>Phương thức thanh toán</h3>
+
+            <div class="d-block my-3">
+              <div class="custom-control custom-radio mb-2">
+                <input id="cod" name="payment_option" value="COD" type="radio" class="custom-control-input" checked
+                  required>
+                <label class="custom-control-label" for="cod">
+                  <strong>COD</strong> - Thanh toán khi nhận hàng
+                </label>
+              </div>
+
+              <div class="custom-control custom-radio mb-2">
+                <input id="momo" name="payment_option" value="MOMO" type="radio" class="custom-control-input" required>
+                <label class="custom-control-label" for="momo">
+                  <strong>MoMo</strong> - Ví điện tử MoMo
+                </label>
+              </div>
+
+              <div class="custom-control custom-radio mb-2">
+                <input id="zalopay" name="payment_option" value="ZALOPAY" type="radio" class="custom-control-input"
+                  required>
+                <label class="custom-control-label" for="zalopay">
+                  <strong>ZaloPay</strong> - Ví điện tử ZaloPay
+                </label>
+              </div>
+
+              <div class="custom-control custom-radio mb-2">
+                <input id="shopeepay" name="payment_option" value="SHOPEEPAY" type="radio" class="custom-control-input"
+                  required>
+                <label class="custom-control-label" for="shopeepay">
+                  <strong>ShopeePay</strong> - Ví điện tử ShopeePay
+                </label>
+              </div>
+
+              <div class="custom-control custom-radio mb-2">
+                <input id="vnpay" name="payment_option" value="VNPAY" type="radio" class="custom-control-input"
+                  required>
+                <label class="custom-control-label" for="vnpay">
+                  <strong>VNPay</strong> - Cổng thanh toán VNPay
+                </label>
+              </div>
+
+              <div class="custom-control custom-radio mb-2">
+                <input id="banktransfer" name="payment_option" value="BANK" type="radio" class="custom-control-input"
+                  required>
+                <label class="custom-control-label" for="banktransfer">
+                  <strong>Chuyển khoản ngân hàng</strong> - Chuyển khoản qua Internet Banking
+                </label>
+              </div>
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Tiếp tục đặt hàng</button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-4 mb-4">
+        {% include "order_snippet.html" %}
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+  var hideable_shipping_form = $('.hideable_shipping_form');
+  var hideable_billing_form = $('.hideable_billing_form');
+
+  var use_default_shipping = document.querySelector("input[name=use_default_shipping]");
+  var use_default_billing = document.querySelector("input[name=use_default_billing]");
+  var same_billing_address = document.querySelector("input[name=same_billing_address]");
+
+  // Xử lý checkbox sử dụng địa chỉ giao hàng mặc định
+  if (use_default_shipping) {
+    use_default_shipping.addEventListener('change', function () {
+      if (this.checked) {
+        hideable_shipping_form.hide();
+      } else {
+        hideable_shipping_form.show();
+      }
+    });
+  }
+
+  // Xử lý checkbox sử dụng địa chỉ thanh toán mặc định
+  if (use_default_billing) {
+    use_default_billing.addEventListener('change', function () {
+      if (this.checked) {
+        hideable_billing_form.hide();
+      } else {
+        hideable_billing_form.show();
+      }
+    });
+  }
+
+  // Xử lý checkbox địa chỉ thanh toán giống địa chỉ giao hàng
+  if (same_billing_address) {
+    same_billing_address.addEventListener('change', function () {
+      if (this.checked) {
+        hideable_billing_form.hide();
+      } else {
+        hideable_billing_form.show();
+      }
+    });
+  }
+</script>
+{% endblock extra_scripts %}

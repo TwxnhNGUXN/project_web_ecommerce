@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<main>
+  <div class="container">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5">
+      <span class="navbar-brand">Danh mục:</span>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+        aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="basicExampleNav">
+        <ul class="navbar-nav mr-auto">
+          <!-- Trang tất cả sản phẩm -->
+          <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:home' %}">Tất cả</a>
+          </li>
+
+          <!-- Danh mục Laptop -->
+          <li class="nav-item {% if '/category/LT/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'LT' %}">Laptop</a>
+          </li>
+
+          <!-- Danh mục PC -->
+          <li class="nav-item {% if '/category/PC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'PC' %}">PC để bàn</a>
+          </li>
+
+          <!-- Danh mục Màn hình -->
+          <li class="nav-item {% if '/category/MN/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'MN' %}">Màn hình</a>
+          </li>
+
+
+          <!-- Danh mục Phụ kiện -->
+          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'HP' %}">Tai Nghe</a>
+          </li>
+          <!-- Danh mục Phụ kiện -->
+          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'MS' %}">Chuột</a>
+          </li>
+          <!-- Danh mục Phụ kiện -->
+          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'KB' %}">Bàn phím</a>
+          </li>
+        </ul>
+        <ul>
+          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:customer_support' %}">Chăm sóc khách hàng</a>
+
+          </li>
+        </ul>
+
+
+        <!-- Thanh tìm kiếm -->
+        <form class="form-inline" method="get" action="{% url 'core:home' %}">
+          <div class="md-form my-0">
+            <input class="form-control mr-sm-2" type="text" name="q" placeholder="Tìm kiếm sản phẩm..."
+              aria-label="Search">
+          </div>
+        </form>
+      </div>
+    </nav>
+
+    <!-- /.Navbar -->
+
+    <!-- Product Section -->
+    <section class="text-center mb-5">
+      <div class="row wow fadeIn">
+
+        {% for item in object_list %}
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card h-100 shadow-sm hoverable">
+
+            <div class="view overlay">
+              <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+              <a href="{{ item.get_absolute_url }}">
+                <div class="mask rgba-white-slight"></div>
+              </a>
+            </div>
+
+            <div class="card-body text-center">
+              <a href="{{ item.get_absolute_url }}" class="dark-grey-text">
+                <h5 class="font-weight-bold">{{ item.title }}</h5>
+              </a>
+
+              <p class="text-muted small mb-2">{{ item.get_category_display }}</p>
+
+              <!-- Example specs for laptop -->
+              <ul class="list-unstyled text-left pl-3 mb-3">
+                <li><i class="fas fa-microchip mr-1"></i> CPU: {{ item.cpu|default:"Intel Core i5" }}</li>
+                <li><i class="fas fa-memory mr-1"></i> RAM: {{ item.ram|default:"8GB" }}</li>
+                <li><i class="fas fa-hdd mr-1"></i> Ổ cứng: {{ item.storage|default:"512GB SSD" }}</li>
+              </ul>
+
+              <h4 class="font-weight-bold blue-text mb-3">
+                {% if item.discount_price %}
+                <del class="text-muted mr-2">${{ item.price }}</del>
+                <strong>${{ item.discount_price }}</strong>
+                {% else %}
+                <strong>${{ item.price }}</strong>
+                {% endif %}
+              </h4>
+
+              <a href="{{ item.get_absolute_url }}" class="btn btn-sm btn-primary">
+                <i class="fas fa-shopping-cart mr-1"></i> Thêm vào giỏ hàng
+              </a>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </section>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="d-flex justify-content-center wow fadeIn">
+      <ul class="pagination pg-blue">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {% endif %}
+        <li class="page-item active">
+          <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+  </div>
+</main>
+{% endblock content %}
