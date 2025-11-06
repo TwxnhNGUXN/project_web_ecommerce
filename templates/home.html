@@ -1,151 +1,645 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block content %}
+<div class="container-fluid">
+  <style>
+    /* ========== SLIDER STYLES ========== */
+    .promotional-slider {
+      margin-top: 20px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
 
+    .slider-container {
+      position: relative;
+      height: 450px;
+      overflow: hidden;
+    }
 
-<main>
-  <div class="container">
+    .slider-wrapper {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+      height: 100%;
+    }
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark mdb-color lighten-3 mt-3 mb-5">
-      <span class="navbar-brand">Danh mục:</span>
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      gap: 15px;
+      padding: 0 10px;
+    }
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-        aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    /* Main Banner (Left) - 66.67% width */
+    .main-banner {
+      flex: 2;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
 
-      <div class="collapse navbar-collapse" id="basicExampleNav">
-        <ul class="navbar-nav mr-auto">
-          <!-- Trang tất cả sản phẩm -->
-          <li class="nav-item {% if request.path == '/' %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:home' %}">Tất cả</a>
-          </li>
+    .main-banner:hover {
+      transform: scale(1.02);
+    }
 
-          <!-- Danh mục Laptop -->
-          <li class="nav-item {% if '/category/LT/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'LT' %}">Laptop</a>
-          </li>
+    .main-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-          <!-- Danh mục PC -->
-          <li class="nav-item {% if '/category/PC/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'PC' %}">PC để bàn</a>
-          </li>
+    /* Side Banners (Right) - 33.33% width */
+    .side-banners {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
 
-          <!-- Danh mục Màn hình -->
-          <li class="nav-item {% if '/category/MN/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'MN' %}">Màn hình</a>
-          </li>
+    .side-banner {
+      flex: 1;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
 
+    .side-banner:hover {
+      transform: scale(1.05);
+    }
 
-          <!-- Danh mục Phụ kiện -->
-          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'HP' %}">Tai Nghe</a>
-          </li>
-          <!-- Danh mục Phụ kiện -->
-          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'MS' %}">Chuột</a>
-          </li>
-          <!-- Danh mục Phụ kiện -->
-          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:category' 'KB' %}">Bàn phím</a>
-          </li>
-        </ul>
-        <ul>
-          <li class="nav-item {% if '/category/AC/' in request.path %}active{% endif %}">
-            <a class="nav-link" href="{% url 'core:customer_support' %}">Chăm sóc khách hàng</a>
+    .side-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-          </li>
-        </ul>
+    /* Navigation Arrows */
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      color: #d32f2f;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
+    .slider-nav:hover {
+      background: #d32f2f;
+      color: white;
+      transform: translateY(-50%) scale(1.1);
+    }
 
-        <!-- Thanh tìm kiếm -->
-        <form class="form-inline" method="get" action="{% url 'core:home' %}">
-          <div class="md-form my-0">
-            <input class="form-control mr-sm-2" type="text" name="q" placeholder="Tìm kiếm sản phẩm..."
-              aria-label="Search">
+    .slider-nav.prev {
+      left: 20px;
+    }
+
+    .slider-nav.next {
+      right: 20px;
+    }
+
+    /* Dots Navigation */
+    .slider-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .dot:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.2);
+    }
+
+    .dot.active {
+      background: #d32f2f;
+      width: 35px;
+      border-radius: 10px;
+    }
+
+    /* Progress Bar */
+    .slider-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: #d32f2f;
+      width: 0%;
+      transition: width 0.1s linear;
+      z-index: 11;
+    }
+
+    /* Responsive Slider */
+    @media (max-width: 992px) {
+      .slider-container {
+        height: 350px;
+      }
+
+      .slide {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .main-banner,
+      .side-banners {
+        flex: none;
+      }
+
+      .main-banner {
+        height: 60%;
+      }
+
+      .side-banners {
+        height: 40%;
+        flex-direction: row;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .slider-container {
+        height: 500px;
+      }
+
+      .side-banners {
+        flex-direction: column;
+      }
+
+      .slider-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+
+      .slider-nav.prev {
+        left: 10px;
+      }
+
+      .slider-nav.next {
+        right: 10px;
+      }
+    }
+
+    /* ========== PRODUCT CARD STYLES ========== */
+    .product-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .product-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px 8px 0 0;
+      background: #f9f9f9;
+      padding: 20px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image-wrapper img {
+      transform: scale(1.05);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #d32f2f;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .product-body {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-category {
+      color: #757575;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      min-height: 45px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-title a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .product-title a:hover {
+      color: #d32f2f;
+    }
+
+    .product-specs {
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .product-specs li {
+      padding: 4px 0;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .product-specs li strong {
+      color: #333;
+      font-weight: 600;
+    }
+
+    .product-price-section {
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .product-price {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .price-original {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 14px;
+    }
+
+    .price-current {
+      color: #d32f2f;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .price-single {
+      color: #d32f2f;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .btn-add-cart {
+      width: 100%;
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-cart:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+  </style>
+
+  <!-- ========== PROMOTIONAL SLIDER ========== -->
+  <section class="promotional-slider">
+    <div class="slider-container">
+      <div class="slider-wrapper" id="sliderWrapper">
+
+        <!-- Slide 1 -->
+        <div class="slide">
+          <!-- Main Banner (Left - 2/3 width) -->
+          <div class="main-banner">
+            <a href="#">
+              <img src="https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-van-phong-slider-t10.jpg"
+                alt="Deal sốc giá hời tháng 10">
+            </a>
           </div>
-        </form>
-      </div>
-    </nav>
 
-    <!-- /.Navbar -->
-
-    <!-- Product Section -->
-    <section class="text-center mb-5">
-      <div class="row wow fadeIn">
-
-        {% for item in object_list %}
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card h-100 shadow-sm hoverable">
-
-            <div class="view overlay">
-              <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
-              <a href="{{ item.get_absolute_url }}">
-                <div class="mask rgba-white-slight"></div>
+          <!-- Side Banners (Right - 1/3 width) -->
+          <div class="side-banners">
+            <div class="side-banner">
+              <a href="#">
+                <img src="https://file.hstatic.net/200000722513/file/gearvn-man-hinh-sub-t8.png"
+                  alt="Tặng màn hình Gaming 240Hz">
               </a>
             </div>
-
-            <div class="card-body text-center">
-              <a href="{{ item.get_absolute_url }}" class="dark-grey-text">
-                <h5 class="font-weight-bold">{{ item.title }}</h5>
-              </a>
-
-              <p class="text-muted small mb-2">{{ item.get_category_display }}</p>
-
-              <!-- Example specs for laptop -->
-              <ul class="list-unstyled text-left pl-3 mb-3">
-                <li><i class="fas fa-microchip mr-1"></i> CPU: {{ item.cpu|default:"Intel Core i5" }}</li>
-                <li><i class="fas fa-memory mr-1"></i> RAM: {{ item.ram|default:"8GB" }}</li>
-                <li><i class="fas fa-hdd mr-1"></i> Ổ cứng: {{ item.storage|default:"512GB SSD" }}</li>
-              </ul>
-
-              <h4 class="font-weight-bold blue-text mb-3">
-                {% if item.discount_price %}
-                <del class="text-muted mr-2">${{ item.price }}</del>
-                <strong>${{ item.discount_price }}</strong>
-                {% else %}
-                <strong>${{ item.price }}</strong>
-                {% endif %}
-              </h4>
-
-              <a href="{{ item.get_absolute_url }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-shopping-cart mr-1"></i> Thêm vào giỏ hàng
+            <div class="side-banner">
+              <a href="#">
+                <img src="https://file.hstatic.net/200000722513/file/gearvn-laptop-gaming-slider-bot-t8.png"
+                  alt="Laptop Gaming">
               </a>
             </div>
-
           </div>
         </div>
-        {% endfor %}
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="main-banner">
+            <a href="#">
+              <img src="https://file.hstatic.net/200000722513/file/gearvn-ban-phim-slider-right-t8.png"
+                alt="Bàn phím Gaming">
+            </a>
+          </div>
+          <div class="side-banners">
+            <div class="side-banner">
+              <a href="#">
+                <img src="https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-rtx-5060-t9-bottom.png"
+                  alt="PC Gaming">
+              </a>
+            </div>
+            <div class="side-banner">
+              <a href="#">
+                <img src="https://file.hstatic.net/200000722513/file/gearvn-gaming-gear-deal-hoi-sub-banner-t8.png"
+                  alt="Gaming Gear">
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <div class="main-banner">
+            <a href="#">
+              <img src="https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-t9-slider.png"
+                alt="Khuyến mãi đặc biệt">
+            </a>
+          </div>
+          <div class="side-banners">
+            <div class="side-banner">
+              <a href="#">
+                <img src="https://file.hstatic.net/200000722513/file/gearvn-gaming-gear-deal-hoi-sub-banner-t8.png"
+                  alt="Phụ kiện Gaming">
+              </a>
+            </div>
+            <div class="side-banner">
+              <a href="#">
+                <img
+                  src="https://file.hstatic.net/200000722513/file/banner_790x250_tai_nghe_6f6dcb17d3a54fcc88b3de96762d2d41.jpg"
+                  alt="Tai nghe Gaming">
+              </a>
+            </div>
+          </div>
+        </div>
 
       </div>
-    </section>
 
-    <!-- Pagination -->
-    {% if is_paginated %}
-    <nav class="d-flex justify-content-center wow fadeIn">
-      <ul class="pagination pg-blue">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        {% endif %}
-        <li class="page-item active">
-          <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
-        </li>
-        {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
-    {% endif %}
+      <!-- Navigation Arrows -->
+      <button class="slider-nav prev" onclick="moveSlide(-1)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="slider-nav next" onclick="moveSlide(1)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
 
-  </div>
-</main>
+      <!-- Dots Navigation -->
+      <div class="slider-dots" id="sliderDots"></div>
+
+      <!-- Progress Bar -->
+      <div class="slider-progress" id="sliderProgress"></div>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCT SECTION ========== -->
+  <section class="mb-5">
+    <div class="row">
+      {% for item in object_list %}
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="product-card">
+          <div class="product-image-wrapper">
+            {% if item.discount_price %}
+            <span class="product-badge">SALE</span>
+            {% endif %}
+            <a href="{{ item.get_absolute_url }}">
+              <img src="{{ item.image.url }}" alt="{{ item.title }}">
+            </a>
+          </div>
+
+          <div class="product-body">
+            <div class="product-category">{{ item.get_category_display }}</div>
+
+            <h5 class="product-title">
+              <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+            </h5>
+
+            <ul class="product-specs list-unstyled">
+              {% if item.cpu %}
+              <li><strong>CPU:</strong> {{ item.cpu }}</li>
+              {% endif %}
+              {% if item.ram %}
+              <li><strong>RAM:</strong> {{ item.ram }}</li>
+              {% endif %}
+              {% if item.storage %}
+              <li><strong>Ổ cứng:</strong> {{ item.storage }}</li>
+              {% endif %}
+            </ul>
+
+            <div class="product-price-section">
+              <div class="product-price">
+                {% if item.discount_price %}
+                {% widthratio item.price 1 1000000 as original_price %}
+                {% widthratio item.discount_price 1 1000000 as discount_price %}
+                <span class="price-original">{{ original_price|intcomma }}₫</span>
+                <span class="price-current">{{ discount_price|intcomma }}₫</span>
+                {% else %}
+                {% widthratio item.price 1 1000000 as full_price %}
+                <span class="price-single">{{ full_price|intcomma }}₫</span>
+                {% endif %}
+              </div>
+
+              <a href="{{ item.get_absolute_url }}" class="btn btn-add-cart">
+                Thêm vào giỏ hàng
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ========== PAGINATION ========== -->
+  {% if is_paginated %}
+  <nav class="d-flex justify-content-center mb-5">
+    <ul class="pagination pg-blue">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+      </li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>
+
+<!-- ========== SLIDER JAVASCRIPT ========== -->
+<script>
+  let currentSlide = 0;
+  let slideInterval;
+  const slideDuration = 5000; // 5 seconds
+
+  // Initialize slider
+  document.addEventListener('DOMContentLoaded', function () {
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('sliderDots');
+
+    // Create dots
+    slides.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      if (index === 0) dot.classList.add('active');
+      dot.onclick = () => goToSlide(index);
+      dotsContainer.appendChild(dot);
+    });
+
+    // Start auto slide
+    startAutoSlide();
+
+    // Pause on hover
+    const sliderContainer = document.querySelector('.slider-container');
+    sliderContainer.addEventListener('mouseenter', stopAutoSlide);
+    sliderContainer.addEventListener('mouseleave', startAutoSlide);
+  });
+
+  function moveSlide(direction) {
+    const slides = document.querySelectorAll('.slide');
+    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    updateSlider();
+  }
+
+  function goToSlide(index) {
+    currentSlide = index;
+    updateSlider();
+  }
+
+  function updateSlider() {
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const dots = document.querySelectorAll('.dot');
+
+    // Move slider
+    sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+    // Update dots
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentSlide);
+    });
+
+    // Reset progress bar
+    resetProgressBar();
+  }
+
+  function startAutoSlide() {
+    stopAutoSlide();
+    resetProgressBar();
+    slideInterval = setInterval(() => {
+      moveSlide(1);
+    }, slideDuration);
+  }
+
+  function stopAutoSlide() {
+    if (slideInterval) {
+      clearInterval(slideInterval);
+      slideInterval = null;
+    }
+  }
+
+  function resetProgressBar() {
+    const progressBar = document.getElementById('sliderProgress');
+    progressBar.style.transition = 'none';
+    progressBar.style.width = '0%';
+
+    setTimeout(() => {
+      progressBar.style.transition = `width ${slideDuration}ms linear`;
+      progressBar.style.width = '100%';
+    }, 50);
+  }
+</script>
+
 {% endblock content %}

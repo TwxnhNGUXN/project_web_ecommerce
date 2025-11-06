@@ -1,14 +1,15 @@
+{% load static %}
 {% load cart_template_tags %}
 
-<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar shadow-sm">
   <div class="container">
 
     <!-- Brand -->
     <a class="navbar-brand waves-effect" href="/">
-      <strong class="blue-text">ComputerVN</strong>
+      <img src="{% static 'img/logo5.png' %}" alt="ByteStore Logo" height="45">
     </a>
 
-    <!-- Collapse -->
+    <!-- Collapse Button -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -19,46 +20,45 @@
 
       <!-- Left -->
       <ul class="navbar-nav mr-auto">
-        {% comment %} <li class="nav-item active">
-          <a class="nav-link waves-effect" href="/">Home
-            <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link waves-effect" href="/checkout">
-            Checkout</a>
-        </li> {% endcomment %}
+        <!-- (Bạn có thể thêm menu ở đây sau này nếu muốn) -->
       </ul>
 
       <!-- Right -->
       <ul class="navbar-nav nav-flex-icons">
+        <!-- Chăm sóc khách hàng -->
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'core:customer_support' %}">
+            <i class="fas fa-headset"></i>
+            <span class="clearfix d-none d-sm-inline-block">Chăm sóc khách hàng</span>
+          </a>
+        </li>
+
         {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a href="{% url 'core:order-summary' %}" class="nav-link waves-effect">
-            <span class="badge red z-depth-1 mr-1"> {{ request.user|cart_item_count }} </span>
+            <span class="badge red z-depth-1 mr-1">{{ request.user|cart_item_count }}</span>
             <i class="fas fa-shopping-cart"></i>
-            <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+            <span class="clearfix d-none d-sm-inline-block">Giỏ hàng</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
-            <span class="clearfix d-none d-sm-inline-block"> Logout </span>
+            <span class="clearfix d-none d-sm-inline-block">Đăng xuất</span>
           </a>
         </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link waves-effect" href="{% url 'account_login' %}">
-            <span class="clearfix d-none d-sm-inline-block"> Login </span>
+            <span class="clearfix d-none d-sm-inline-block">Đăng nhập</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
-            <span class="clearfix d-none d-sm-inline-block"> Signup </span>
+            <span class="clearfix d-none d-sm-inline-block">Đăng kí</span>
           </a>
         </li>
         {% endif %}
       </ul>
     </div>
-
   </div>
 </nav>

@@ -14,7 +14,7 @@
 
           <!-- Card đăng nhập -->
           <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-primary text-white text-center py-4">
+            <div class="card-header bg-danger text-white text-center py-4">
               <h3 class="mb-0 font-weight-bold">
                 <i class="fas fa-user-circle mr-2"></i>
                 {% trans "Đăng Nhập" %}
@@ -67,15 +67,15 @@
                 {% endif %}
 
                 <!-- Nút hành động -->
-                <div class="d-grid gap-2 mb-3">
-                  <button class="btn btn-primary btn-lg" type="submit">
+                <div class="d-flex justify-content-center mb-3">
+                  <button class="btn btn-danger btn-lg" type="submit" style="min-width: 200px;">
                     <i class="fas fa-sign-in-alt mr-2"></i>
                     {% trans "Đăng Nhập" %}
                   </button>
                 </div>
 
                 <div class="text-center">
-                  <a class="text-decoration-none small" href="{% url 'account_reset_password' %}">
+                  <a class="text-decoration-none small text-danger" href="{% url 'account_reset_password' %}">
                     <i class="fas fa-key mr-1"></i>
                     {% trans "Quên mật khẩu?" %}
                   </a>
@@ -89,7 +89,7 @@
             <div class="card-footer text-center py-3 bg-light">
               <small class="text-muted">
                 {% trans "Chưa có tài khoản?" %}
-                <a href="{{ signup_url }}" class="font-weight-bold text-primary">{% trans "Đăng ký ngay" %}</a>
+                <a href="{{ signup_url }}" class="font-weight-bold text-danger">{% trans "Đăng ký ngay" %}</a>
               </small>
             </div>
 
@@ -109,20 +109,20 @@
   }
 
   .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
     border: none;
-    padding: 12px;
+    padding: 12px 30px;
     font-weight: 600;
     transition: transform 0.2s;
   }
 
-  .btn-primary:hover {
+  .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
   }
 
   .socialaccount_providers li {
@@ -150,8 +150,12 @@
   }
 
   .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
   }
 
   .gap-2 {

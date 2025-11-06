@@ -3,9 +3,8 @@ from django import template
 register = template.Library()
 
 @register.filter
-def vnd(value):
+def mul(value, arg):
     try:
-        value = int(value)
-        return f"{value:,}".replace(",", ".") + "₫"
+        return float(value) * float(arg)
     except (ValueError, TypeError):
-        return value
+        return ''

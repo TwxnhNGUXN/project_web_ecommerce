@@ -13,7 +13,7 @@
 
           <!-- Card đăng ký -->
           <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-primary text-white text-center py-4">
+            <div class="card-header bg-danger text-white text-center py-4">
               <h3 class="mb-0 font-weight-bold">
                 <i class="fas fa-user-plus mr-2"></i>
                 {% trans "Đăng Ký Tài Khoản" %}
@@ -42,8 +42,8 @@
                 {% endif %}
 
                 <!-- Nút đăng ký -->
-                <div class="mb-3">
-                  <button class="btn btn-primary btn-lg btn-block w-100" type="submit">
+                <div class="mb-3 d-flex justify-content-center">
+                  <button class="btn btn-danger btn-lg" type="submit" style="min-width: 200px;">
                     <i class="fas fa-user-check mr-2"></i>
                     {% trans "Đăng Ký" %}
                   </button>
@@ -53,9 +53,9 @@
                 <p class="text-center text-muted small mb-0">
                   <i class="fas fa-shield-alt mr-1"></i>
                   {% trans "Bằng việc đăng ký, bạn đồng ý với" %}
-                  <a href="#" class="text-primary">{% trans "Điều khoản dịch vụ" %}</a>
+                  <a href="#" class="text-danger">{% trans "Điều khoản dịch vụ" %}</a>
                   {% trans "và" %}
-                  <a href="#" class="text-primary">{% trans "Chính sách bảo mật" %}</a>
+                  <a href="#" class="text-danger">{% trans "Chính sách bảo mật" %}</a>
                 </p>
 
               </form>
@@ -66,7 +66,7 @@
             <div class="card-footer text-center py-3 bg-light">
               <small class="text-muted">
                 {% trans "Đã có tài khoản?" %}
-                <a href="{{ login_url }}" class="font-weight-bold text-primary">{% trans "Đăng nhập tại đây" %}</a>
+                <a href="{{ login_url }}" class="font-weight-bold text-danger">{% trans "Đăng nhập tại đây" %}</a>
               </small>
             </div>
 
@@ -86,26 +86,26 @@
   }
 
   .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
   }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
     border: none;
     border-radius: 8px;
-    padding: 12px;
+    padding: 12px 30px;
     font-weight: 600;
     transition: transform 0.2s;
   }
 
-  .btn-primary:hover {
+  .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
   }
 
   .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
   }
 
   .alert-info {
@@ -116,11 +116,15 @@
   }
 
   .alert-info .alert-link {
-    color: #667eea;
+    color: #dc3545;
   }
 
   .alert-info .alert-link:hover {
     text-decoration: underline;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
   }
 
   @media (max-width: 768px) {

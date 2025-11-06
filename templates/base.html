@@ -1,77 +1,489 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>{% block head_title %}{% endblock %}</title>
-  {% block extra_head %}
-  {% endblock %}
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
-  <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
-  <style type="text/css">
-    html,
-    body,
-    header,
-    .carousel {
-      height: 60vh;
+  <title>{% block head_title %}Bytronix Shop{% endblock head_title %}</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+
+  {% block extra_head %}{% endblock extra_head %}
+
+  <style>
+    /* ========== GLOBAL STYLES ========== */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
     }
 
-    @media (max-width: 740px) {
+    .container-fluid {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
 
-      html,
-      body,
-      header,
-      .carousel {
-        height: 100vh;
+    /* ========== HEADER STYLES ========== */
+    .header-top {
+      background-color: #fff;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo {
+      max-height: 50px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-actions a {
+      color: #333;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+
+    .header-actions a:hover {
+      color: #d32f2f;
+    }
+
+    .cart-badge {
+      background-color: #d32f2f;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* ========== CATEGORY NAVBAR STYLES ========== */
+    .category-navbar {
+      background-color: #d32f2f !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-navbar .navbar-brand,
+    .category-navbar .nav-link {
+      color: #ffffff !important;
+      padding: 12px 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .category-navbar .nav-link:hover,
+    .category-navbar .active>.nav-link {
+      background-color: #b71c1c !important;
+      color: #fff !important;
+    }
+
+    /* Search Form Styles */
+    .search-form {
+      margin: 0;
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 350px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      font-size: 16px;
+      z-index: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: #fff !important;
+      color: #333 !important;
+      border: none !important;
+      border-radius: 25px !important;
+      padding: 10px 20px 10px 45px !important;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-input::placeholder {
+      color: #999 !important;
+    }
+
+    .search-input:focus {
+      background-color: #fff !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      outline: none;
+    }
+
+    @media (max-width: 992px) {
+      .search-wrapper {
+        width: 250px;
       }
     }
 
-    @media (min-width: 800px) and (max-width: 850px) {
+    @media (max-width: 768px) {
+      .search-wrapper {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
 
-      html,
-      body,
-      header,
-      .carousel {
-        height: 100vh;
+    /* Remove old search styles */
+
+    /* Mega Menu */
+    .nav-item.dropdown {
+      position: relative;
+    }
+
+    .mega-menu {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background-color: #fff;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      min-width: 900px;
+      z-index: 1000;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .nav-item.dropdown:hover .mega-menu {
+      display: block;
+    }
+
+    .mega-menu-wrapper {
+      display: flex;
+      gap: 30px;
+    }
+
+    .mega-column {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .mega-column h3 {
+      font-size: 14px;
+      font-weight: bold;
+      color: #d32f2f;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #d32f2f;
+      padding-bottom: 8px;
+    }
+
+    .mega-column a {
+      display: block;
+      padding: 8px 0;
+      color: #333 !important;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .mega-column a:hover {
+      color: #d32f2f !important;
+      padding-left: 5px;
+    }
+
+    /* ========== FOOTER STYLES ========== */
+    .footer {
+      background-color: #333;
+      color: #fff;
+      padding: 40px 0 20px;
+      margin-top: 60px;
+    }
+
+    .footer h5 {
+      color: #d32f2f;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .footer a {
+      color: #ccc;
+      text-decoration: none;
+      display: block;
+      padding: 5px 0;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #555;
+      margin-top: 30px;
+      padding-top: 20px;
+      text-align: center;
+      color: #999;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 992px) {
+      .mega-menu {
+        min-width: 100%;
+        left: 0;
+        right: 0;
+      }
+
+      .mega-menu-wrapper {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-actions {
+        flex-direction: column;
+        gap: 10px;
       }
     }
   </style>
 </head>
 
-{% include "navbar.html" %}
-
 <body>
-
-  <div class="mt-5 pt-4">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+  <!-- ========== HEADER ========== -->
+  <header class="header-top">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-3">
+          <a href="{% url 'core:home' %}">
+            <img src="{% static 'img/logo5.png' %}" alt="Bytronix Logo" class="logo">
+          </a>
+        </div>
+        <div class="col-md-9">
+          <div class="header-actions justify-content-end">
+            <a href="{% url 'core:customer_support' %}">
+              <i class="fas fa-headset"></i>
+              <span>Chăm sóc khách hàng</span>
+            </a>
+            <a href="{% url 'core:order-summary' %}">
+              <i class="fas fa-shopping-cart"></i>
+              <span>Giỏ hàng</span>
+              <span class="cart-badge">{{ cart_item_count }}</span>
+            </a>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Đăng xuất</span>
+            </a>
+            {% else %}
+            <a href="{% url 'account_login' %}">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Đăng nhập</span>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
     </div>
-    {% endfor %}
+  </header>
+
+  <!-- ========== CATEGORY NAVBAR ========== -->
+  <nav class="navbar navbar-expand-lg navbar-dark category-navbar">
+    <div class="container-fluid">
+      <span class="navbar-brand">Danh mục:</span>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+        aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="basicExampleNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:home' %}">Tất cả</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link" href="{% url 'core:category' 'LT' %}">Laptop</a>
+            <div class="mega-menu">
+              <div class="mega-menu-wrapper">
+                <div class="mega-column">
+                  <h3>Thương hiệu</h3>
+                  <a href="#">ASUS</a>
+                  <a href="#">ACER</a>
+                  <a href="#">MSI</a>
+                  <a href="#">LENOVO</a>
+                  <a href="#">DELL</a>
+                  <a href="#">HP - Pavilion</a>
+                  <a href="#">LG - Gram</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Giá bán</h3>
+                  <a href="#">Dưới 15 triệu</a>
+                  <a href="#">Từ 15 đến 20 triệu</a>
+                  <a href="#">Trên 20 triệu</a>
+                </div>
+                <div class="mega-column">
+                  <h3>CPU Intel - AMD</h3>
+                  <a href="#">Intel Core i3</a>
+                  <a href="#">Intel Core i5</a>
+                  <a href="#">Intel Core i7</a>
+                  <a href="#">AMD Ryzen</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Nhu cầu sử dụng</h3>
+                  <a href="#">Đồ họa - Studio</a>
+                  <a href="#">Học sinh - Sinh viên</a>
+                  <a href="#">Mỏng nhẹ cao cấp</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Linh phụ kiện Laptop</h3>
+                  <a href="#">Ram laptop</a>
+                  <a href="#">SSD laptop</a>
+                  <a href="#">Ổ cứng di động</a>
+                </div>
+              </div>
+              <div class="mega-menu-wrapper" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                <div class="mega-column">
+                  <h3>Laptop ASUS</h3>
+                  <a href="#">ASUS OLED Series</a>
+                  <a href="#">Vivobook Series</a>
+                  <a href="#">Zenbook Series</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Laptop ACER</h3>
+                  <a href="#">Aspire Series</a>
+                  <a href="#">Swift Series</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Laptop MSI</h3>
+                  <a href="#">Modern Series</a>
+                  <a href="#">Prestige Series</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Laptop Lenovo</h3>
+                  <a href="#">Thinkbook Series</a>
+                  <a href="#">Ideapad Series</a>
+                  <a href="#">Thinkpad Series</a>
+                  <a href="#">Yoga Series</a>
+                </div>
+                <div class="mega-column">
+                  <h3>Laptop Dell</h3>
+                  <a href="#">Inspiron Series</a>
+                  <a href="#">Vostro Series</a>
+                  <a href="#">Latitude Series</a>
+                  <a href="#">XPS Series</a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item {% if '/category/PC/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'PC' %}">PC để bàn</a>
+          </li>
+          <li class="nav-item {% if '/category/MN/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'MN' %}">Màn hình</a>
+          </li>
+          <li class="nav-item {% if '/category/HP/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'HP' %}">Tai Nghe</a>
+          </li>
+          <li class="nav-item {% if '/category/MS/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'MS' %}">Chuột</a>
+          </li>
+          <li class="nav-item {% if '/category/KB/' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'core:category' 'KB' %}">Bàn phím</a>
+          </li>
+        </ul>
+
+        <form class="form-inline search-form" method="get" action="{% url 'core:home' %}">
+          <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input class="form-control search-input" type="text" name="q" placeholder="Tìm kiếm sản phẩm..."
+              aria-label="Search">
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main>
+    {% if messages %}
+    <div class="container-fluid mt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
     {% endif %}
-  </div>
 
-  {% block content %}
-  {% endblock content %}
+    {% block content %}
+    {% endblock content %}
+  </main>
 
-  {% block extra_body %}
-  {% endblock %}
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h5>Về Bytronix</h5>
+          <p>Chuyên cung cấp laptop, PC và phụ kiện công nghệ chính hãng với giá tốt nhất thị trường.</p>
+        </div>
+        <div class="col-md-3">
+          <h5>Liên kết nhanh</h5>
+          <a href="#">Giới thiệu</a>
+          <a href="#">Chính sách bảo hành</a>
+          <a href="#">Chính sách đổi trả</a>
+          <a href="#">Hướng dẫn mua hàng</a>
+        </div>
+        <div class="col-md-3">
+          <h5>Hỗ trợ khách hàng</h5>
+          <a href="#">Hotline: 1900-xxxx</a>
+          <a href="#">Email: support@bytronix.vn</a>
+          <a href="#">Câu hỏi thường gặp</a>
+        </div>
+        <div class="col-md-3">
+          <h5>Kết nối với chúng tôi</h5>
+          <div class="social-links">
+            <a href="https://github.com/TwxnhNGUXN" target="_blank">
+              <i class="fab fa-github mr-3"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Bytronix. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
-  {% include "footer.html" %}
-  {% include "scripts.html" %}
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
-  {% block extra_scripts %}
-  {% endblock extra_scripts %}
+  {% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 
 </html>
